@@ -15,7 +15,7 @@ namespace Sales.Services
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri(urlBase);
-                var url = $"{prefix}/{controller}";
+                var url = $"{prefix}{controller}";
                 var response = await client.GetAsync(url);
                 var answer = await response.Content.ReadAsStringAsync();
 
