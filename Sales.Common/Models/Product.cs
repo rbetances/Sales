@@ -11,5 +11,10 @@
         public Decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime PublishOn { get; set; }
+
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 }
