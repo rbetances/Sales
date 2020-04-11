@@ -13,6 +13,8 @@
             <infra:IntanceLocator x:Key="Locator"/>
             <!--UrlBase-->
             <x:String x:Key="UrlApi">http://10.0.0.22:8080</x:String>
+            <x:String x:Key="UrlPrefix">/Api</x:String>
+            <x:String x:Key="UrlProductsController">/Products</x:String>
             
             <!--Global Styles-->
             <Color x:Key="NavigationPrimary">#2196F3</Color>

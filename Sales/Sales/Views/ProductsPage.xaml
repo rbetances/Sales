@@ -6,7 +6,8 @@
              BindingContext="{Binding Main,Source={StaticResource Locator}}"
              mc:Ignorable="d"
              x:Class="Sales.Views.ProductsPage"
-             Title="Products">
+             xmlns:i18n="clr-namespace:Sales.Helpers"
+             Title="{i18n:Translate Products}}">
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Products}" Padding="5">
             <ListView 
