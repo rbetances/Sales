@@ -1,4 +1,4 @@
-﻿@model Sales.Common.Models.Product
+﻿@model Sales.Backend.Models.ProductView
 
 @{
     ViewBag.Title = "Details";
@@ -16,6 +16,26 @@
 
         <dd>
             @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+
+                <img src="@Url.Content(Model.ImagePath)" alt="Image" style="width:200px;height:250px;max-width: 100%; height: auto;" />
+            }
         </dd>
 
         <dt>
@@ -45,6 +65,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-success" })
 </p>
