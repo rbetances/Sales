@@ -174,10 +174,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FilesHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LocalDataContext.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ProductView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -186,6 +188,12 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Products\41erwwQzAnL._AC_UL320_ML3_.jpg" />
+    <Content Include="Content\Products\51y8P2rYc5L._AC_SX466_.jpg" />
+    <Content Include="Content\Products\614X3JTZQvL._AC_UY218_ML3_.jpg" />
+    <Content Include="Content\Products\917Vthq511L._AC_UY218_ML3_.jpg" />
+    <Content Include="Content\Products\televisión-300x236.jpg" />
+    <Content Include="Content\Products\user-image-.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
