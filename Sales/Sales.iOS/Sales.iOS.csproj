@@ -149,4 +149,7 @@
       <Name>Sales</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\NoProduct.png" />
+  </ItemGroup>
 </Project>

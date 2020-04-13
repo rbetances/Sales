@@ -21,7 +21,7 @@ namespace Sales.API.Controllers
         // GET: api/Products
         public IQueryable<Product> GetProducts()
         {
-            return db.Products;
+            return db.Products.OrderBy(x => x.Description);
         }
 
         // GET: api/Products/5

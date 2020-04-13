@@ -21,6 +21,17 @@
         [DataType(DataType.Date)]
         public DateTime PublishOn { get; set; }
 
+        public string ImageFullPath 
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.ImagePath))
+                {
+                    return "NoProduct";
+                }
+                return $"http://10.0.0.22{this.ImagePath.Replace("~","")}";
+            }
+        }
         public override string ToString()
         {
             return Description;
