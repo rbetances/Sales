@@ -13,8 +13,8 @@ namespace Sales
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
-            MainPage = new MainPage();
+           // DependencyService.Register<MockDataStore>();
+            MainPage = new NavigationPage( new ProductsPage());
         }
 
         protected override void OnStart()
