@@ -2,6 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class Product
     {
         [Key]
@@ -20,8 +22,9 @@
         [Display(Name = "Publish On")]
         [DataType(DataType.Date)]
         public DateTime PublishOn { get; set; }
-
-        public string ImageFullPath 
+        [NotMapped]
+        public byte[] ImageArray { get; set; }
+        public string ImageFullPath
         {
             get
             {
@@ -29,7 +32,7 @@
                 {
                     return "NoProduct";
                 }
-                return $"http://10.0.0.22{this.ImagePath.Replace("~","")}";
+                return $"http://10.0.0.22:8080{this.ImagePath.Replace("~","")}";
             }
         }
         public override string ToString()

@@ -13,8 +13,12 @@
             <StackLayout 
                 Padding="5">
                 <Image 
-                    Source="NoProduct"
+                    Source="{Binding ImageSource}"
                     WidthRequest="200" HeightRequest="170">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeImageCommand}">
+                        </TapGestureRecognizer>
+                    </Image.GestureRecognizers>
                 </Image>
                 <Label 
                     Text="{i18n:Translate ChangeImage}"

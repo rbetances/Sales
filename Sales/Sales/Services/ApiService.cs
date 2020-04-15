@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Sales.Common.Models;
 using Sales.Helpers;
+using Xamarin.Forms;
 
 namespace Sales.Services
 {
@@ -22,10 +23,11 @@ namespace Sales.Services
                     Message = Languages.TurnOnInternet,
                 };
             }
-
             var isReachable = await CrossConnectivity.Current.IsRemoteReachable("google.com");
+
             if (!isReachable)
             {
+                CrossConnectivity.Dispose();
                 return new Response
                 {
                     IsSuccess = false,
@@ -33,10 +35,30 @@ namespace Sales.Services
                 };
             }
 
+            CrossConnectivity.Dispose();
+
             return new Response
             {
                 IsSuccess = true,
             };
+        }
+        public bool DoIHaveInternet()
+        {
+            if (!CrossConnectivity.IsSupported)
+                return true;
+
+            //Do this only if you need to and aren't listening to any other events as they will not fire.
+            var connectivity = CrossConnectivity.Current;
+
+            try
+            {
+                return connectivity.IsConnected;
+            }
+            finally
+            {
+                CrossConnectivity.Dispose();
+            }
+
         }
         public async Task<Response> GetList<T>(string urlBase, string prefix, string controller)
         {
@@ -68,7 +90,7 @@ namespace Sales.Services
             }
         }
 
-        public async Task<Response> Post<T>(string urlBase, string prefix, string controller,T model)
+        public async Task<Response> Post<T>(string urlBase, string prefix, string controller, T model)
         {
             try
             {
@@ -77,7 +99,7 @@ namespace Sales.Services
                 var client = new HttpClient();
                 client.BaseAddress = new Uri(urlBase);
                 var url = $"{prefix}{controller}";
-                var response = await client.PostAsync(url,content);
+                var response = await client.PostAsync(url, content);
                 var answer = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)

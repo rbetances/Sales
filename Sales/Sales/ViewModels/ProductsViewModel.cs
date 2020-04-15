@@ -12,10 +12,14 @@ namespace Sales.ViewModels
 {
     public class ProductsViewModel : BaseViewModel
     {
-        private ApiService apiService;
 
+        #region Attributes
+        private ApiService apiService;
         private ObservableCollection<Product> products;
         private bool isRefreshing;
+        #endregion
+
+        #region Properties
         public ObservableCollection<Product> Products
         {
             get { return this.products; }
@@ -26,13 +30,32 @@ namespace Sales.ViewModels
             get { return this.isRefreshing; }
             set { this.SetProperty(ref this.isRefreshing, value); }
         }
+        #endregion
 
+        #region Constructors
         public ProductsViewModel()
         {
             this.apiService = new ApiService();
             this.LoadProducts();
         }
+        #endregion
 
+        #region Singleton
+        private static ProductsViewModel instance;
+
+        public static ProductsViewModel GetInstance()
+        {
+            if (instance == null)
+            {
+                return new ProductsViewModel();
+            }
+
+            return instance;
+
+        }
+        #endregion
+
+        #region Methods
         private async void LoadProducts()
         {
             this.IsRefreshing = true;
@@ -42,11 +65,11 @@ namespace Sales.ViewModels
             if (!connection.IsSuccess)
             {
                 this.IsRefreshing = false;
-               // Device.BeginInvokeOnMainThread(
-                 //   async () =>
-                   // {
-                        await Application.Current.MainPage.DisplayAlert(Languages.Error, connection.Message, "Ok");
-                    //});
+                // Device.BeginInvokeOnMainThread(
+                //   async () =>
+                // {
+                await Application.Current.MainPage.DisplayAlert(Languages.Error, connection.Message, "Ok");
+                //});
                 return;
             }
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
@@ -68,14 +91,17 @@ namespace Sales.ViewModels
             var list = (List<Product>)response.Result;
             this.Products = new ObservableCollection<Product>(list);
 
-        }
+        } 
+        #endregion
 
+        #region Commands
         public ICommand RefreshCommand
         {
             get
             {
                 return new RelayCommand(LoadProducts);
             }
-        }
+        } 
+        #endregion
     }
 }
