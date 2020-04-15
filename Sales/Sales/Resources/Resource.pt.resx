@@ -186,4 +186,7 @@
   <data name="No" xml:space="preserve">
     <value>Não</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>confirme</value>
+  </data>
 </root>

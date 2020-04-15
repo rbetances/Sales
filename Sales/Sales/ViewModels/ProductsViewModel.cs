@@ -4,6 +4,7 @@ using Sales.Helpers;
 using Sales.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -15,12 +16,12 @@ namespace Sales.ViewModels
 
         #region Attributes
         private ApiService apiService;
-        private ObservableCollection<Product> products;
+        private ObservableCollection<ProductItemViewModel> products;
         private bool isRefreshing;
         #endregion
 
         #region Properties
-        public ObservableCollection<Product> Products
+        public ObservableCollection<ProductItemViewModel> Products
         {
             get { return this.products; }
             set { this.SetProperty(ref this.products, value); }
@@ -35,6 +36,7 @@ namespace Sales.ViewModels
         #region Constructors
         public ProductsViewModel()
         {
+            instance = this;
             this.apiService = new ApiService();
             this.LoadProducts();
         }
@@ -79,19 +81,30 @@ namespace Sales.ViewModels
 
             if (!response.IsSuccess)
             {
-                Device.BeginInvokeOnMainThread(
-                   async () =>
-                   {
-                       await Application.Current.MainPage.DisplayAlert(Languages.Error, response.Message, "Ok");
-                   });
+                await Application.Current.MainPage.DisplayAlert(Languages.Error, response.Message, "Ok");
+
                 return;
             }
 
             this.IsRefreshing = false;
             var list = (List<Product>)response.Result;
-            this.Products = new ObservableCollection<Product>(list);
 
-        } 
+            var myList = list.Select(x => new ProductItemViewModel
+            {
+                Description = x.Description,
+                ImageArray = x.ImageArray,
+                ImagePath = x.ImagePath,
+                IsAvailable = x.IsAvailable,
+                Price = x.Price,
+                ProductId = x.ProductId,
+                PublishOn = x.PublishOn,
+                Remarks = x.Remarks
+,
+            });
+
+            this.Products = new ObservableCollection<ProductItemViewModel>(myList);
+
+        }
         #endregion
 
         #region Commands
@@ -101,7 +114,7 @@ namespace Sales.ViewModels
             {
                 return new RelayCommand(LoadProducts);
             }
-        } 
+        }
         #endregion
     }
 }

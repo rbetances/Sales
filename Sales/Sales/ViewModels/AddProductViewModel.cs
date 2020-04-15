@@ -173,7 +173,22 @@ namespace Sales.ViewModels
                 return;
             }
 
-            this.IsRunning= false;
+            var newProduct = (Product)response.Result;
+            var productsViewModel = ProductsViewModel.GetInstance();
+            var localViewMOdel = newProduct;
+            productsViewModel.Products.Add(new ProductItemViewModel
+            {
+                Description = newProduct.Description,
+                ImageArray = newProduct.ImageArray,
+                ImagePath = newProduct.ImagePath,
+                IsAvailable = newProduct.IsAvailable,
+                Price = newProduct.Price,
+                ProductId = newProduct.ProductId,
+                PublishOn = newProduct.PublishOn,
+                Remarks = newProduct.Remarks
+            });
+
+            this.IsRunning = false;
             this.IsEnabled = true;
             await Application.Current.MainPage.Navigation.PopAsync();
 

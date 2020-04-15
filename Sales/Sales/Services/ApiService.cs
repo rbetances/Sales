@@ -42,24 +42,6 @@ namespace Sales.Services
                 IsSuccess = true,
             };
         }
-        public bool DoIHaveInternet()
-        {
-            if (!CrossConnectivity.IsSupported)
-                return true;
-
-            //Do this only if you need to and aren't listening to any other events as they will not fire.
-            var connectivity = CrossConnectivity.Current;
-
-            try
-            {
-                return connectivity.IsConnected;
-            }
-            finally
-            {
-                CrossConnectivity.Dispose();
-            }
-
-        }
         public async Task<Response> GetList<T>(string urlBase, string prefix, string controller)
         {
             try
@@ -89,7 +71,6 @@ namespace Sales.Services
                 };
             }
         }
-
         public async Task<Response> Post<T>(string urlBase, string prefix, string controller, T model)
         {
             try
@@ -121,5 +102,34 @@ namespace Sales.Services
                 };
             }
         }
+        public async Task<Response> Delete(string urlBase, string prefix, string controller, int id)
+        {
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(urlBase);
+                var url = $"{prefix}{controller}/{id}";
+                var response = await client.DeleteAsync(url);
+                var answer = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response { IsSuccess = false, Message = answer };
+                }
+
+
+                return new Response { IsSuccess = true };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
     }
 }
