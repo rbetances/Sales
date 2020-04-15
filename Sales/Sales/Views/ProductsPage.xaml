@@ -3,11 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             BindingContext="{Binding Main,Source={StaticResource Locator}}"
              mc:Ignorable="d"
              x:Class="Sales.Views.ProductsPage"
+             BindingContext="{Binding Main,Source={StaticResource Locator}}"
              xmlns:i18n="clr-namespace:Sales.Helpers"
-             Title="{i18n:Translate Products}}">
+             Title="{i18n:Translate Products}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="ic_launcher" Command="{Binding AddProductCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Products}" Padding="5">
             <ListView 
@@ -16,7 +19,7 @@
                 IsRefreshing="{Binding IsRefreshing}" 
                 RefreshCommand="{Binding RefreshCommand}" 
                 HasUnevenRows="True">
-                <ListView.ItemTemplate> 
+                <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <Grid>
@@ -25,16 +28,20 @@
                                     <ColumnDefinition Width="1.5*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding ImageFullPath}" WidthRequest="100"  Grid.Column="0" >
-                                    
+                                <Image Margin="10"
+                                    Source="{Binding ImageFullPath}" 
+                                    WidthRequest="80"  
+                                    Grid.Column="0">
                                 </Image>
-                                <Label 
+                                <StackLayout VerticalOptions="Center" Grid.Column="1">
+                                    <Label              
                                     FontAttributes="Bold" 
-                                    Grid.Column="1" 
-                                    Text="{Binding Description}" 
-                                    VerticalOptions="Center">
-                                </Label>
+                                    Text="{Binding Description}"></Label>
+                                    <Label   
+                                    Text="{Binding Remarks}"></Label>
+                                </StackLayout>
                                 <Label 
+                                    FontAttributes="Bold"
                                     HorizontalOptions="End"
                                     Grid.Column="2" 
                                     Text="{Binding Price, StringFormat='{0:C2}'}"

@@ -129,4 +129,34 @@
   <data name="TurnOnInternet" xml:space="preserve">
     <value>Por favor, ative sua configuração da Internet.</value>
   </data>
+  <data name="AddProduct" xml:space="preserve">
+    <value>Adicionar produto</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>descrição</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Observações</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Preço</value>
+  </data>
+  <data name="IsAvailable" xml:space="preserve">
+    <value>Está disponível</value>
+  </data>
+  <data name="PublishON" xml:space="preserve">
+    <value>Publicar em</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="ChangeImage" xml:space="preserve">
+    <value>Toque na imagem para mudar</value>
+  </data>
+  <data name="DescriptionError" xml:space="preserve">
+    <value>Você deve inserir uma descrição</value>
+  </data>
+  <data name="PriceError" xml:space="preserve">
+    <value>Você deve inserir um preço</value>
+  </data>
 </root>
