@@ -87,7 +87,9 @@ namespace Sales.ViewModels
             }
 
             this.IsRefreshing = false;
+
             var list = (List<Product>)response.Result;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             var myList = list.Select(x => new ProductItemViewModel
             {
@@ -99,8 +101,25 @@ namespace Sales.ViewModels
                 ProductId = x.ProductId,
                 PublishOn = x.PublishOn,
                 Remarks = x.Remarks
-,
             });
+
+            //var myList = new List<ProductItemViewModel>();
+            //foreach (var item in list)
+            //{
+            //    myList.Add(new ProductItemViewModel
+            //    {
+            //        Description = item.Description,
+            //        ImageArray = item.ImageArray,
+            //        ImagePath = item.ImagePath,
+            //        IsAvailable = item.IsAvailable,
+            //        Price = item.Price,
+            //        ProductId = item.ProductId,
+            //        PublishOn = item.PublishOn,
+            //        Remarks = item.Remarks
+            //    });
+            //}
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
 
             this.Products = new ObservableCollection<ProductItemViewModel>(myList);
 

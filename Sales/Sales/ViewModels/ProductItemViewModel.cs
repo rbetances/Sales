@@ -32,14 +32,6 @@ namespace Sales.ViewModels
                 return new RelayCommand(EditProduct);
             }
         }
-
-        private void EditProduct()
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
-
-        #region Methods
         public ICommand DeleteProductCommand
         {
             get
@@ -47,7 +39,13 @@ namespace Sales.ViewModels
                 return new RelayCommand(DeleteProduct);
             }
         }
+        #endregion
 
+        #region Methods
+        private void EditProduct()
+        {
+            throw new NotImplementedException();
+        }
         private async void DeleteProduct()
         {
             var answer = await Application.Current.MainPage.DisplayAlert(
