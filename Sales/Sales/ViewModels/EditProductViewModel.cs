@@ -73,6 +73,14 @@ namespace Sales.ViewModels
                 return new RelayCommand(ChangeImage);
             }
         }
+
+        public ICommand DeleteProductCommand
+        {
+            get
+            {
+                return new RelayCommand(DeleteProduct);
+            }
+        }
         #endregion
 
         #region Methods
@@ -182,6 +190,51 @@ namespace Sales.ViewModels
             this.IsEnabled = true;
             await Application.Current.MainPage.Navigation.PopAsync();
 
+        }
+        private async void DeleteProduct()
+        {
+            var answer = await Application.Current.MainPage.DisplayAlert(
+                Resource.Confirm,
+                Resource.DeleteConfirmation,
+                Resource.Yes,
+                Resource.No);
+
+            if (!answer)
+            {
+                return;
+            }
+            var connection = await apiService.CheckConnection();
+            if (!connection.IsSuccess)
+            {
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, connection.Message, "Ok");
+                return;
+            }
+
+            var urlBase = Application.Current.Resources["UrlApi"].ToString();
+            var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
+            var urlController = Application.Current.Resources["UrlProductsController"].ToString();
+
+            this.isEnabled = false;
+            this.isRunning = true;
+
+            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.Product.ProductId);
+            if (!response.IsSuccess)
+            {
+                this.isEnabled = true;
+                this.isRunning = false;
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, response.Message, "Ok");
+                return;
+            }
+
+            var productsViewModel = ProductsViewModel.GetInstance();
+            var deletedProduct = productsViewModel.MyProducts.Where(p => p.ProductId == this.Product.ProductId).FirstOrDefault();
+            if (deletedProduct != null)
+            {
+                productsViewModel.MyProducts.Remove(deletedProduct);
+            }
+            productsViewModel.RefreshList();
+            this.isEnabled = true;
+            this.isRunning = false;
         }
         #endregion
     }
