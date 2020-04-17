@@ -2,6 +2,7 @@
 using Sales.Common.Models;
 using Sales.Resources;
 using Sales.Services;
+using Sales.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,10 @@ namespace Sales.ViewModels
         #endregion
 
         #region Methods
-        private void EditProduct()
+        private async void EditProduct()
         {
-            throw new NotImplementedException();
+            MainViewModel.GetInstance().EditProduct = new EditProductViewModel(this);
+            await Application.Current.MainPage.Navigation.PushAsync(new EditProductPage());
         }
         private async void DeleteProduct()
         {
@@ -76,14 +78,13 @@ namespace Sales.ViewModels
             }
 
             var productsViewModel = ProductsViewModel.GetInstance();
-            var deletedProduct = productsViewModel.Products.Where(p => p.ProductId == this.ProductId).FirstOrDefault();
+            var deletedProduct = productsViewModel.MyProducts.Where(p => p.ProductId == this.ProductId).FirstOrDefault();
             if (deletedProduct != null)
             {
-                productsViewModel.Products.Remove(deletedProduct);
+                productsViewModel.MyProducts.Remove(deletedProduct);
             }
-
-
-            #endregion
+            productsViewModel.RefreshList();
         }
+        #endregion
     }
 }

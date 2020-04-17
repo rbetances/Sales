@@ -2,6 +2,7 @@
 using Sales.Common.Models;
 using Sales.Helpers;
 using Sales.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Sales.ViewModels
         #endregion
 
         #region Properties
+        public List<Product> MyProducts { get; set; }
         public ObservableCollection<ProductItemViewModel> Products
         {
             get { return this.products; }
@@ -86,12 +88,15 @@ namespace Sales.ViewModels
                 return;
             }
 
+            this.MyProducts = (List<Product>)response.Result;
+            this.RefreshList();
+         
             this.IsRefreshing = false;
+        }
 
-            var list = (List<Product>)response.Result;
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            var myList = list.Select(x => new ProductItemViewModel
+        public void RefreshList()
+        {
+            var myListProductItemViewModel = this.MyProducts.Select(x => new ProductItemViewModel
             {
                 Description = x.Description,
                 ImageArray = x.ImageArray,
@@ -103,26 +108,7 @@ namespace Sales.ViewModels
                 Remarks = x.Remarks
             });
 
-            //var myList = new List<ProductItemViewModel>();
-            //foreach (var item in list)
-            //{
-            //    myList.Add(new ProductItemViewModel
-            //    {
-            //        Description = item.Description,
-            //        ImageArray = item.ImageArray,
-            //        ImagePath = item.ImagePath,
-            //        IsAvailable = item.IsAvailable,
-            //        Price = item.Price,
-            //        ProductId = item.ProductId,
-            //        PublishOn = item.PublishOn,
-            //        Remarks = item.Remarks
-            //    });
-            //}
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-
-            this.Products = new ObservableCollection<ProductItemViewModel>(myList);
-
+            this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.OrderBy(x => x.Description));
         }
         #endregion
 

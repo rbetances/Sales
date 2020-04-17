@@ -1,18 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Input;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Sales.Common.Models;
 using Sales.Helpers;
 using Sales.Resources;
 using Sales.Services;
+using System.Linq;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Sales.ViewModels
 {
-    public class AddProductViewModel : BaseViewModel
+    public class EditProductViewModel : BaseViewModel
     {
         #region Attributes
         private MediaFile file;
@@ -20,13 +19,20 @@ namespace Sales.ViewModels
         private bool isRunning;
         private bool isEnabled;
         private ApiService apiService;
+        private Product product;
+        #endregion
+
+        #region Constructor
+        public EditProductViewModel(Product product)
+        {
+            apiService = new ApiService();
+            this.IsEnabled = true;
+            this.product = product;
+            this.ImageSource = product.ImageFullPath;
+        }
         #endregion
 
         #region Properties
-
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public string Remarks { get; set; }
         public bool IsRunning
         {
             get { return isRunning; }
@@ -44,15 +50,10 @@ namespace Sales.ViewModels
             get { return imageSource; }
             set { SetProperty(ref this.imageSource, value); }
         }
-
-        #endregion
-
-        #region Constructors
-        public AddProductViewModel()
+        public Product Product
         {
-            apiService = new ApiService();
-            this.IsEnabled = true;
-            this.ImageSource = "NoProduct";
+            get { return this.product; }
+            set { this.SetProperty(ref this.product, value); }
         }
         #endregion
 
@@ -77,55 +78,59 @@ namespace Sales.ViewModels
         #region Methods
         private async void ChangeImage()
         {
-            await CrossMedia.Current.Initialize();
+            try
+            {
+                await CrossMedia.Current.Initialize();
 
-            var source = await Application.Current.MainPage.DisplayActionSheet(
-                Resource.ImageSource,
-                Resource.Cancel,
-                null,
-                Resource.FromGallery,
-                Resource.NewPicture
-                );
+                var source = await Application.Current.MainPage.DisplayActionSheet(
+                    Resource.ImageSource,
+                    Resource.Cancel,
+                    null,
+                    Resource.FromGallery,
+                    Resource.NewPicture
+                    );
 
-            if (source == Resource.Cancel)
-            {
-                this.file = null;
-                return;
-            }
-            if (source == Resource.NewPicture)
-            {
-                this.file = await CrossMedia.Current.TakePhotoAsync(
-                    new StoreCameraMediaOptions
-                    {
-                        Directory = "Sample",
-                        Name = "test.jpg",
-                        PhotoSize = PhotoSize.Small
-                    });
-            }
-            else
-            {
-                this.file = await CrossMedia.Current.PickPhotoAsync();
-            }
-            if (this.file != null)
-            {
-                this.ImageSource = ImageSource.FromStream(() =>
+                if (source == Resource.Cancel)
                 {
-                    var stream = this.file.GetStream();
-                    return stream;
-                });
+                    this.file = null;
+                    return;
+                }
+                if (source == Resource.NewPicture)
+                {
+                    this.file = await CrossMedia.Current.TakePhotoAsync(
+                        new StoreCameraMediaOptions
+                        {
+                            Directory = "Sample",
+                            Name = "test.jpg",
+                            PhotoSize = PhotoSize.Small
+                        });
+                }
+                else
+                {
+                    this.file = await CrossMedia.Current.PickPhotoAsync();
+                }
+                if (this.file != null)
+                {
+                    this.ImageSource = ImageSource.FromStream(() =>
+                    {
+                        var stream = this.file.GetStream();
+                        return stream;
+                    });
+                }
+            }
+            catch
+            {
             }
         }
 
         private async void Save()
         {
-            if (string.IsNullOrEmpty(this.Description))
+            if (string.IsNullOrEmpty(this.Product.Description))
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.DescriptionError, "Ok");
                 return;
             }
-            decimal price;
-            decimal.TryParse(this.Price.ToString(), out price);
-            if (this.Price <= 0)
+            if (this.Product.Price <= 0)
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.PriceError, "Ok");
                 return;
@@ -148,21 +153,12 @@ namespace Sales.ViewModels
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
 
-            byte[] imageArray = null;
             if (this.file != null)
             {
-                imageArray = FilesHelper.ReadFully(this.file.GetStream());
+                this.product.ImageArray = FilesHelper.ReadFully(this.file.GetStream());
             }
 
-            var product = new Product
-            {
-                Description = this.Description,
-                Price = price,
-                Remarks = this.Remarks,
-                ImageArray = imageArray
-            };
-
-            var response = await this.apiService.Post(urlBase, urlPrefix, urlController, product);
+            var response = await this.apiService.Put<Product>(urlBase, urlPrefix, urlController, this.Product, this.Product.ProductId);
 
             if (!response.IsSuccess)
             {
@@ -173,9 +169,13 @@ namespace Sales.ViewModels
                 return;
             }
 
-            var newProduct = (Product)response.Result;
+            var updatedProduct = (Product)response.Result;
             var productsViewModel = ProductsViewModel.GetInstance();
-            productsViewModel.MyProducts.Add(newProduct);
+            var oldProduct = productsViewModel.MyProducts.Where(p => p.ProductId == this.Product.ProductId).FirstOrDefault();
+            if (oldProduct != null)
+                productsViewModel.MyProducts.Remove(oldProduct);
+
+            productsViewModel.MyProducts.Add(updatedProduct);
             productsViewModel.RefreshList();
 
             this.IsRunning = false;

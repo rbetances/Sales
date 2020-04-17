@@ -142,6 +142,15 @@ namespace Sales.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Product.
+        /// </summary>
+        internal static string EditProduct {
+            get {
+                return ResourceManager.GetString("EditProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Error {
@@ -169,7 +178,7 @@ namespace Sales.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Is available.
+        ///   Looks up a localized string similar to Is available?.
         /// </summary>
         internal static string IsAvailable {
             get {

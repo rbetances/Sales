@@ -142,7 +142,7 @@
     <value>Precio</value>
   </data>
   <data name="IsAvailable" xml:space="preserve">
-    <value>Esta disponible</value>
+    <value>Esta disponible?</value>
   </data>
   <data name="PublishON" xml:space="preserve">
     <value>Publicar en</value>
@@ -188,5 +188,8 @@
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Confirmar</value>
+  </data>
+  <data name="EditProduct" xml:space="preserve">
+    <value>Editar producto</value>
   </data>
 </root>
