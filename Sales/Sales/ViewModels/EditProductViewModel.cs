@@ -235,6 +235,8 @@ namespace Sales.ViewModels
             productsViewModel.RefreshList();
             this.isEnabled = true;
             this.isRunning = false;
+
+            await Application.Current.MainPage.Navigation.PopAsync();
         }
         #endregion
     }
