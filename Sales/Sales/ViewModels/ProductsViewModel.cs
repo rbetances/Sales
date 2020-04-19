@@ -71,10 +71,6 @@ namespace Sales.ViewModels
         #endregion
 
         #region Methods
-        private void Search(string filter)
-        {
-            throw new NotImplementedException();
-        }
         private async void LoadProducts()
         {
             this.IsRefreshing = true;
@@ -94,7 +90,7 @@ namespace Sales.ViewModels
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController);
+            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController,Settings.TokenType,Settings.AccessToken);
 
             if (!response.IsSuccess)
             {

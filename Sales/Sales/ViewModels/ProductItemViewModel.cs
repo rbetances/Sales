@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Sales.Common.Models;
+using Sales.Helpers;
 using Sales.Resources;
 using Sales.Services;
 using Sales.Views;
@@ -46,7 +47,7 @@ namespace Sales.ViewModels
         private async void EditProduct()
         {
             MainViewModel.GetInstance().EditProduct = new EditProductViewModel(this);
-            await Application.Current.MainPage.Navigation.PushAsync(new EditProductPage());
+            await App.Navigator.PushAsync(new EditProductPage());
         }
         private async void DeleteProduct()
         {
@@ -70,7 +71,7 @@ namespace Sales.ViewModels
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.ProductId);
+            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.ProductId,Settings.TokenType,Settings.AccessToken);
             if (!response.IsSuccess)
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, response.Message, "Ok");

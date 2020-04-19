@@ -166,7 +166,7 @@ namespace Sales.ViewModels
                 this.product.ImageArray = FilesHelper.ReadFully(this.file.GetStream());
             }
 
-            var response = await this.apiService.Put<Product>(urlBase, urlPrefix, urlController, this.Product, this.Product.ProductId);
+            var response = await this.apiService.Put<Product>(urlBase, urlPrefix, urlController, this.Product, this.Product.ProductId,Settings.TokenType,Settings.AccessToken);
 
             if (!response.IsSuccess)
             {
@@ -188,7 +188,7 @@ namespace Sales.ViewModels
 
             this.IsRunning = false;
             this.IsEnabled = true;
-            await Application.Current.MainPage.Navigation.PopAsync();
+            await App.Navigator.PopAsync();
 
         }
         private async void DeleteProduct()
@@ -217,7 +217,7 @@ namespace Sales.ViewModels
             this.isEnabled = false;
             this.isRunning = true;
 
-            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.Product.ProductId);
+            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.Product.ProductId,Settings.TokenType,Settings.AccessToken);
             if (!response.IsSuccess)
             {
                 this.isEnabled = true;
@@ -236,7 +236,7 @@ namespace Sales.ViewModels
             this.isEnabled = true;
             this.isRunning = false;
 
-            await Application.Current.MainPage.Navigation.PopAsync();
+            await App.Navigator.PopAsync();
         }
         #endregion
     }

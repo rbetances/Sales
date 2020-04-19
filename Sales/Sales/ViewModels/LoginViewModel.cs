@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using Sales.Helpers;
 using Sales.Resources;
 using Sales.Services;
 using Sales.Views;
@@ -86,7 +87,10 @@ namespace Sales.ViewModels
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.SomethingWrong, "Ok");
                 return;
             }
-
+            Settings.TokenType = token.TokenType;
+            Settings.AccessToken = token.AccessToken;
+            Settings.IsRemembered = this.IsRemembered;
+            
             MainViewModel.GetInstance().Products = new ProductsViewModel();
             Application.Current.MainPage = new ProductsPage();
 

@@ -162,7 +162,7 @@ namespace Sales.ViewModels
                 ImageArray = imageArray
             };
 
-            var response = await this.apiService.Post(urlBase, urlPrefix, urlController, product);
+            var response = await this.apiService.Post(urlBase, urlPrefix, urlController, product,Settings.TokenType,Settings.AccessToken);
 
             if (!response.IsSuccess)
             {
@@ -180,7 +180,7 @@ namespace Sales.ViewModels
 
             this.IsRunning = false;
             this.IsEnabled = true;
-            await Application.Current.MainPage.Navigation.PopAsync();
+            await App.Navigator.PopAsync();
 
         }
         #endregion
