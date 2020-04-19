@@ -13,7 +13,13 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Products}" Padding="5">
+            <SearchBar 
+                Placeholder="{i18n:Translate Search}"
+                SearchCommand="{Binding SearchCommand}"
+                Text="{Binding Filter}">
+            </SearchBar>
             <ListView 
+                HeightRequest="30"
                 ItemsSource="{Binding Products}" 
                 IsPullToRefreshEnabled="True"
                 IsRefreshing="{Binding IsRefreshing}" 

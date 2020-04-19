@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Sales.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Sales.Services;
-using Sales.Views;
+using Sales.ViewModels;
 
 namespace Sales
 {
@@ -14,7 +12,8 @@ namespace Sales
             InitializeComponent();
 
            // DependencyService.Register<MockDataStore>();
-            MainPage = new NavigationPage( new ProductsPage());
+           MainViewModel.GetInstance().Login = new LoginViewModel();
+           MainPage = new NavigationPage( new LoginPage());
         }
 
         protected override void OnStart()

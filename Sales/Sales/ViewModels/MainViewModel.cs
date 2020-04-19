@@ -11,13 +11,13 @@ namespace Sales.ViewModels
         public ProductsViewModel Products { get; set; }
         public AddProductViewModel AddProduct { get; set; }
         public EditProductViewModel EditProduct { get; set; }
+        public LoginViewModel Login { get; set; }
         #endregion
 
         #region Constructors
         public MainViewModel()
         {
             instance = this;
-            this.Products = new ProductsViewModel();
         }
 
         #endregion

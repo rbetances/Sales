@@ -19,9 +19,20 @@ namespace Sales.ViewModels
         private ApiService apiService;
         private ObservableCollection<ProductItemViewModel> products;
         private bool isRefreshing;
+        private string filter;
         #endregion
 
         #region Properties
+        public string Filter 
+        {
+            get { return this.filter; }
+            set 
+            { 
+                this.filter = value;
+                this.RefreshList();
+            }
+            
+        }
         public List<Product> MyProducts { get; set; }
         public ObservableCollection<ProductItemViewModel> Products
         {
@@ -60,6 +71,10 @@ namespace Sales.ViewModels
         #endregion
 
         #region Methods
+        private void Search(string filter)
+        {
+            throw new NotImplementedException();
+        }
         private async void LoadProducts()
         {
             this.IsRefreshing = true;
@@ -83,14 +98,14 @@ namespace Sales.ViewModels
 
             if (!response.IsSuccess)
             {
+                this.IsRefreshing = false;
                 await Application.Current.MainPage.DisplayAlert(Languages.Error, response.Message, "Ok");
-
                 return;
             }
 
             this.MyProducts = (List<Product>)response.Result;
             this.RefreshList();
-         
+
             this.IsRefreshing = false;
         }
 
@@ -107,12 +122,25 @@ namespace Sales.ViewModels
                 PublishOn = x.PublishOn,
                 Remarks = x.Remarks
             });
-
-            this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.OrderBy(x => x.Description));
+            if (string.IsNullOrEmpty(this.Filter))
+            {
+                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.OrderBy(x => x.Description));
+            }
+            else
+            {
+                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(y => y.Description.ToLower().Contains(this.Filter.ToLower())).OrderBy(x => x.Description));
+            }
         }
         #endregion
 
         #region Commands
+        public ICommand SearchCommand
+        {
+            get
+            {
+                return new RelayCommand(this.RefreshList);
+            }
+        }
         public ICommand RefreshCommand
         {
             get
