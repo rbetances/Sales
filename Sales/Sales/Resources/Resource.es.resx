@@ -193,7 +193,7 @@
     <value>Editar producto</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Buscar…</value>
+    <value>Buscar</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Inicio de sesión</value>
@@ -220,10 +220,10 @@
     <value>Nuevo usuario</value>
   </data>
   <data name="EmailValidation" xml:space="preserve">
-    <value>Debes introducir tu dirección de correo electrónico</value>
+    <value>Debes introducir tu dirección de correo electrónico.</value>
   </data>
   <data name="PasswordValidation" xml:space="preserve">
-    <value>Debes ingresar tu contraseña</value>
+    <value>Debes ingresar tu contraseña.</value>
   </data>
   <data name="SomethingWrong" xml:space="preserve">
     <value>El correo electrónico o la contraseña no son válidas.</value>
@@ -277,7 +277,7 @@
     <value>Debe introducir un nombre.</value>
   </data>
   <data name="LastNameError" xml:space="preserve">
-    <value>Debe escribir apellidos</value>
+    <value>Debe escribir apellidos.</value>
   </data>
   <data name="EMailError" xml:space="preserve">
     <value>Hay que introducir una dirección de correo válida.</value>

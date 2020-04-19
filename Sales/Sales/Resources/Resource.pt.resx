@@ -193,10 +193,10 @@
     <value>Editar produto</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Pesquisar...</value>
+    <value>Pesquisar</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Logon:</value>
+    <value>Logon</value>
   </data>
   <data name="EMail" xml:space="preserve">
     <value>Email</value>
@@ -208,7 +208,7 @@
     <value>Senha</value>
   </data>
   <data name="PasswordPlaceHolder" xml:space="preserve">
-    <value>Digite sua senha</value>
+    <value>Digite sua senha...</value>
   </data>
   <data name="Forgot" xml:space="preserve">
     <value>Esqueceu-se da palavra-passe?</value>
@@ -220,7 +220,7 @@
     <value>Novo utilizador</value>
   </data>
   <data name="EmailValidation" xml:space="preserve">
-    <value>Informe seu email</value>
+    <value>Informe seu email.</value>
   </data>
   <data name="PasswordValidation" xml:space="preserve">
     <value>Precisa de inserir a sua palavra-passe.</value>
@@ -286,7 +286,7 @@
     <value>Você deve digitar um número de telefone.</value>
   </data>
   <data name="PasswordConfirmError" xml:space="preserve">
-    <value>Tem de introduzir uma palavra-passe</value>
+    <value>Tem de introduzir uma palavra-passe.</value>
   </data>
   <data name="PasswordsNoMatch" xml:space="preserve">
     <value>A senha e confirme a deve ser igual a.</value>
