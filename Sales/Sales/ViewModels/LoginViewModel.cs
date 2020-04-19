@@ -92,7 +92,7 @@ namespace Sales.ViewModels
             Settings.IsRemembered = this.IsRemembered;
             
             MainViewModel.GetInstance().Products = new ProductsViewModel();
-            Application.Current.MainPage = new ProductsPage();
+            Application.Current.MainPage = new MasterPage();
 
             this.IsRunning = false;
             this.IsEnabled = true;

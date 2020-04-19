@@ -173,4 +173,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\twitter_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\settings.png" />
+  </ItemGroup>
 </Project>
