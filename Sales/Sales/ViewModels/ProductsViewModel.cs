@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Sales.Common.Models;
 using Sales.Helpers;
+using Sales.Resources;
 using Sales.Services;
 using System;
 using System.Collections.Generic;
@@ -17,21 +18,22 @@ namespace Sales.ViewModels
 
         #region Attributes
         private ApiService apiService;
+        private DataService dataService;
         private ObservableCollection<ProductItemViewModel> products;
         private bool isRefreshing;
         private string filter;
         #endregion
 
         #region Properties
-        public string Filter 
+        public string Filter
         {
             get { return this.filter; }
-            set 
-            { 
+            set
+            {
                 this.filter = value;
                 this.RefreshList();
             }
-            
+
         }
         public List<Product> MyProducts { get; set; }
         public ObservableCollection<ProductItemViewModel> Products
@@ -51,6 +53,7 @@ namespace Sales.ViewModels
         {
             instance = this;
             this.apiService = new ApiService();
+            this.dataService = new DataService();
             this.LoadProducts();
         }
         #endregion
@@ -77,32 +80,53 @@ namespace Sales.ViewModels
 
             var connection = await apiService.CheckConnection();
             await Task.Delay(1000);
-            if (!connection.IsSuccess)
+            if (connection.IsSuccess)
+            {
+                var answer = await this.LoadProductsFromApi();
+                if (answer)
+                {
+                    this.SaveProductsToDB();
+                }
+            }
+            else
+            {
+                await this.LoadProductsFromDB();
+            }
+            if (this.MyProducts == null || this.MyProducts.Count == 0)
             {
                 this.IsRefreshing = false;
-                // Device.BeginInvokeOnMainThread(
-                //   async () =>
-                // {
-                await Application.Current.MainPage.DisplayAlert(Languages.Error, connection.Message, "Ok");
-                //});
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.NoProductsMessage, "Ok");
                 return;
             }
+            this.RefreshList();
+            this.IsRefreshing = false;
+        }
+
+        private async Task LoadProductsFromDB()
+        {
+            this.MyProducts = await this.dataService.GetAllProducts();
+        }
+
+        private async Task SaveProductsToDB()
+        {
+           await this.dataService.DeleteAllProducts();
+           this.dataService.Insert(MyProducts);
+        }
+
+        private async Task<bool> LoadProductsFromApi()
+        {
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController,Settings.TokenType,Settings.AccessToken);
+            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController, Settings.TokenType, Settings.AccessToken);
 
             if (!response.IsSuccess)
             {
-                this.IsRefreshing = false;
-                await Application.Current.MainPage.DisplayAlert(Languages.Error, response.Message, "Ok");
-                return;
+                return false;
             }
 
             this.MyProducts = (List<Product>)response.Result;
-            this.RefreshList();
-
-            this.IsRefreshing = false;
+            return true;
         }
 
         public void RefreshList()

@@ -137,8 +137,8 @@ namespace Sales.ViewModels
             var connection = await apiService.CheckConnection();
             if (!connection.IsSuccess)
             {
-                this.isRunning = false;
-                this.isEnabled = true;
+                this.IsRunning = false;
+                this.IsEnabled = true;
 
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, connection.Message, "Ok");
                 return;
