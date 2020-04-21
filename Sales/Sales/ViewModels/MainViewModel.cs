@@ -41,7 +41,7 @@ namespace Sales.ViewModels
                     {
                         if (claim.ClaimValue.StartsWith("~"))
                         {
-                            return $"https://salesapiservices.azurewebsites.net{claim.ClaimValue.Substring(1)}";
+                            return $"http://10.0.0.22:8080{claim.ClaimValue.Substring(1)}";
                         }
 
                         return claim.ClaimValue;
