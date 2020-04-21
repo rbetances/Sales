@@ -87,6 +87,8 @@ namespace Sales.ViewModels
                 {
                     this.SaveProductsToDB();
                 }
+                else
+                    await this.LoadProductsFromDB();
             }
             else
             {
