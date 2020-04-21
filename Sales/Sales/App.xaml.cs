@@ -2,6 +2,8 @@
 using Xamarin.Forms;
 using Sales.ViewModels;
 using Sales.Helpers;
+using Newtonsoft.Json;
+using Sales.Common.Models;
 
 namespace Sales
 {
@@ -13,15 +15,22 @@ namespace Sales
         {
             InitializeComponent();
 
-            if (Settings.IsRemembered && !string.IsNullOrEmpty(Settings.AccessToken))
+            var mainViewModel = MainViewModel.GetInstance();
+
+            if (Settings.IsRemembered)
             {
-                MainViewModel.GetInstance().Products = new ProductsViewModel();
-                MainPage = new MasterPage();
+
+                if (!string.IsNullOrEmpty(Settings.UserASP))
+                {
+                    mainViewModel.UserASP = JsonConvert.DeserializeObject<MyUserASP>(Settings.UserASP);
+                }
+                mainViewModel.Products = new ProductsViewModel();
+                this.MainPage = new MasterPage();
             }
             else
             {
-                MainViewModel.GetInstance().Login = new LoginViewModel();
-                MainPage = new NavigationPage(new LoginPage());
+                mainViewModel.Login = new LoginViewModel();
+                this.MainPage = new NavigationPage(new LoginPage());
             }
         }
 
