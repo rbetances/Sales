@@ -9,7 +9,7 @@
              xmlns:i18n="clr-namespace:Sales.Helpers"
              Title="{i18n:Translate Products}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="ic_launcher" Command="{Binding AddProductCommand}"></ToolbarItem>
+        <ToolbarItem Icon="ic_add" Command="{Binding AddProductCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Products}" Padding="5">

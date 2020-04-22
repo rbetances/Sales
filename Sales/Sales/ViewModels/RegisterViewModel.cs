@@ -195,6 +195,7 @@ namespace Sales.ViewModels
                 Address = this.Address,
                 EMail = this.EMail,
                 FirstName = this.FirstName,
+                Phone = this.Phone,
                 ImageArray = imageArray,
                 LastName = this.LastName,
                 Password = this.Password,

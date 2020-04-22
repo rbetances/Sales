@@ -68,7 +68,6 @@ namespace Sales.API.Helpers
                     {
                         userManager.AddClaim(newUserASP.Id, new System.Security.Claims.Claim(ClaimTypes.StreetAddress, userRequest.Address));
                     }
-
                     if (!string.IsNullOrEmpty(userRequest.ImagePath))
                     {
                         userManager.AddClaim(newUserASP.Id, new System.Security.Claims.Claim(ClaimTypes.Uri, userRequest.ImagePath));
