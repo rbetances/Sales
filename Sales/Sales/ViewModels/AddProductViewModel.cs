@@ -77,42 +77,49 @@ namespace Sales.ViewModels
         #region Methods
         private async void ChangeImage()
         {
-            await CrossMedia.Current.Initialize();
+            try
+            {
 
-            var source = await Application.Current.MainPage.DisplayActionSheet(
-                Resource.ImageSource,
-                Resource.Cancel,
-                null,
-                Resource.FromGallery,
-                Resource.NewPicture
-                );
+                await CrossMedia.Current.Initialize();
 
-            if (source == Resource.Cancel)
-            {
-                this.file = null;
-                return;
-            }
-            if (source == Resource.NewPicture)
-            {
-                this.file = await CrossMedia.Current.TakePhotoAsync(
-                    new StoreCameraMediaOptions
-                    {
-                        Directory = "Sample",
-                        Name = "test.jpg",
-                        PhotoSize = PhotoSize.Small
-                    });
-            }
-            else
-            {
-                this.file = await CrossMedia.Current.PickPhotoAsync();
-            }
-            if (this.file != null)
-            {
-                this.ImageSource = ImageSource.FromStream(() =>
+                var source = await Application.Current.MainPage.DisplayActionSheet(
+                    Resource.ImageSource,
+                    Resource.Cancel,
+                    null,
+                    Resource.FromGallery,
+                    Resource.NewPicture
+                    );
+
+                if (source == Resource.Cancel)
                 {
-                    var stream = this.file.GetStream();
-                    return stream;
-                });
+                    this.file = null;
+                    return;
+                }
+                if (source == Resource.NewPicture)
+                {
+                    this.file = await CrossMedia.Current.TakePhotoAsync(
+                        new StoreCameraMediaOptions
+                        {
+                            Directory = "Sample",
+                            Name = "test.jpg",
+                            PhotoSize = PhotoSize.Small
+                        });
+                }
+                else
+                {
+                    this.file = await CrossMedia.Current.PickPhotoAsync();
+                }
+                if (this.file != null)
+                {
+                    this.ImageSource = ImageSource.FromStream(() =>
+                    {
+                        var stream = this.file.GetStream();
+                        return stream;
+                    });
+                }
+            }
+            catch
+            { 
             }
         }
 
