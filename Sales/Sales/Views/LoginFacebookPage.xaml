@@ -4,4 +4,16 @@
              xmlns:i18n="clr-namespace:Sales.Helpers"
              x:Class="Sales.Views.LoginFacebookPage"
              Title="{i18n:Translate Login}">
+    <ContentPage.Content>
+        <StackLayout>
+            <ActivityIndicator 
+                IsRunning="True" 
+                IsVisible="True" 
+                IsEnabled="True" 
+                VerticalOptions="Center"
+                Color="Black">
+                
+            </ActivityIndicator>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

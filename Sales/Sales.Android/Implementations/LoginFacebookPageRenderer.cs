@@ -11,6 +11,7 @@ namespace Sales.Droid.Implementations
     using Common.Models;
     using Services;
     using Xamarin.Auth;
+    using Xamarin.Forms;
     using Xamarin.Forms.Platform.Android;
 
     public class LoginFacebookPageRenderer : PageRenderer
@@ -18,7 +19,6 @@ namespace Sales.Droid.Implementations
         public LoginFacebookPageRenderer(Context context) : base(context)
         {
             var activity = this.Context as Activity;
-
             var facebookAppID = Xamarin.Forms.Application.Current.Resources["FacebookAppID"].ToString();
             var facebookAuthURL = Xamarin.Forms.Application.Current.Resources["FacebookAuthURL"].ToString();
             var facebookRedirectURL = Xamarin.Forms.Application.Current.Resources["FacebookRedirectURL"].ToString();

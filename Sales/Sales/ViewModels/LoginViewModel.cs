@@ -131,8 +131,6 @@ namespace Sales.ViewModels
 
             if (!connection.IsSuccess)
             {
-                this.IsRunning = false;
-                this.IsEnabled = true;
                 await Application.Current.MainPage.DisplayAlert(
                     Languages.Error,
                     connection.Message,

@@ -15,7 +15,7 @@
             Padding="5">
             <controls:CircleImage 
                 Source="{Binding UserImageFullPath}"
-                Aspect="AspectFill"
+                Aspect="AspectFit"
                 WidthRequest="200"
                 HeightRequest="200">
                 

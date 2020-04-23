@@ -13,7 +13,7 @@
                 Padding="5">
                 <controls:CircleImage  
                     Source="{Binding ImageSource}"
-                    Aspect="AspectFill"
+                    Aspect="AspectFit"
                     WidthRequest="200"
                     HeightRequest="200">
                     <controls:CircleImage.GestureRecognizers>

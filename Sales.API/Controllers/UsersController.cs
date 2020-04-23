@@ -69,7 +69,7 @@ namespace Sales.API.Controllers
         [Route("LoginFacebook")]
         public IHttpActionResult LoginFacebook(FacebookResponse profile)
         {
-            var user = UsersHelper.GetUserASP(profile.Id);
+            var user = UsersHelper.GetUserASP(profile.Email);
             if (user != null)
             {
                 return Ok(true); // TODO: Pending update the user with new facebook data
@@ -77,7 +77,7 @@ namespace Sales.API.Controllers
 
             var userRequest = new UserRequest
             {
-                EMail = profile.Id,
+                EMail = profile.Email,
                 FirstName = profile.FirstName,
                 ImagePath = profile.Picture.Data.Url,
                 LastName = profile.LastName,

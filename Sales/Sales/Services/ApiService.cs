@@ -451,7 +451,7 @@ namespace Sales.Services
 
                 var tokenResponse = await GetToken(
                     urlBase,
-                    profile.Id,
+                    profile.Email,
                     profile.Id);
                 return tokenResponse;
             }
