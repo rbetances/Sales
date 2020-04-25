@@ -34,8 +34,9 @@ namespace Sales.Droid.Implementations
                 consumerSecret: TwitterSecret,
                 requestTokenUrl: new Uri(TwitterRequestURL),
                 authorizeUrl: new Uri(TwitterAuthURL),
-                callbackUrl: new Uri(TwitterCallbackURL),
-                accessTokenUrl: new Uri(TwitterURLAccess));
+                accessTokenUrl: new Uri(TwitterURLAccess),
+                callbackUrl: new Uri(TwitterCallbackURL)
+                );
 
             auth.Completed += async (sender, eventArgs) =>
             {

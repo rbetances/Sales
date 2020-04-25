@@ -242,7 +242,7 @@
     public class TwitterResponse
     {
         [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
+        public double Id { get; set; }
 
         [JsonProperty(PropertyName = "id_str")]
         public string IdStr { get; set; }
