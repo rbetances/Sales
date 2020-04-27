@@ -8,14 +8,12 @@
     {
         [Key]
         public int CategoryId { get; set; }
-
         [Required]
         [StringLength(50)]
         public string Description { get; set; }
 
         [Display(Name = "Image")]
         public string ImagePath { get; set; }
-
         [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
 
@@ -28,7 +26,7 @@
                     return "noproduct";
                 }
 
-                return $"https://salesbackend.azurewebsites.net{this.ImagePath.Substring(1)}";
+                return $"http://10.0.0.22{this.ImagePath.Substring(1)}";
             }
         }
     }
