@@ -122,15 +122,6 @@
                             <TapGestureRecognizer Command="{Binding LoginTwitterComand}"/>
                         </Image.GestureRecognizers>
                     </Image>
-                    <Image
-                        Aspect="AspectFit"
-                        HeightRequest="70"
-                        Source="instagram_logo"
-                        WidthRequest="70">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding LoginInstagramComand}"/>
-                        </Image.GestureRecognizers>
-                    </Image>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

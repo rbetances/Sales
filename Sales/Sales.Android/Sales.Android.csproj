@@ -90,6 +90,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementations\AuthenticatorExtension.cs" />
     <Compile Include="Implementations\Localize.cs" />
     <Compile Include="Implementations\LoginFacebookPageRenderer.cs" />
     <Compile Include="Implementations\LoginInstagramPageRenderer.cs" />

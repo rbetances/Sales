@@ -12,7 +12,7 @@ namespace Sales.Droid.Implementations
     using Xamarin.Auth;
     using Xamarin.Forms;
     using Xamarin.Forms.Platform.Android;
-
+    [Obsolete]
     public class LoginInstagramPageRenderer : PageRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Page> e)
@@ -25,13 +25,19 @@ namespace Sales.Droid.Implementations
             var InstagramRedirectURL = Xamarin.Forms.Application.Current.Resources["InstagramRedirectURL"].ToString();
             var InstagramScope = Xamarin.Forms.Application.Current.Resources["InstagramScope"].ToString();
 
-            var auth = new OAuth2Authenticator(
-                clientId: InstagramAppID,
-                scope: InstagramScope,
-                authorizeUrl: new Uri(InstagramAuthURL),
-                redirectUrl: new Uri(InstagramRedirectURL));
 
-            auth.Completed += async (sender, eventArgs) =>
+            var authenticator = new AuthenticatorExtensions(
+                   InstagramAppID,
+                   null,
+                   InstagramScope,
+                   new Uri(InstagramAuthURL),
+                   new Uri(InstagramRedirectURL),
+                   new Uri("http://Instagram.com"),
+                   null,
+                   true);
+
+
+            authenticator.Completed += async (sender, eventArgs) =>
             {
                 if (eventArgs.IsAuthenticated)
                 {
@@ -45,7 +51,7 @@ namespace Sales.Droid.Implementations
                 }
             };
 
-            activity.StartActivity(auth.GetUI(activity));
+            activity.StartActivity(authenticator.GetUI(activity));
         }
 
         public async Task<TokenResponse> GetInstagramProfileAsync(string accessToken)
