@@ -10,6 +10,9 @@ using System.Web.Mvc;
 using Sales.Backend.Models;
 using Sales.Common.Models;
 using Sales.Backend.Helpers;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core.Objects;
 
 namespace Sales.Backend.Controllers
 {
@@ -56,6 +59,7 @@ namespace Sales.Backend.Controllers
         {
             return new Category
             {
+                CategoryId = view.CategoryId,
                 Description = view.Description,
                 ImagePath = pic
             };
@@ -64,6 +68,7 @@ namespace Sales.Backend.Controllers
         {
             return new CategoryView
             {
+                CategoryId = category.CategoryId,
                 Description = category.Description,
                 ImagePath = category.ImagePath,
             };
@@ -76,7 +81,7 @@ namespace Sales.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            var category = await db.Categories.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -105,7 +110,19 @@ namespace Sales.Backend.Controllers
 
                 var caregory = this.ToCategory(view, pic);
                 this.db.Entry(caregory).State = EntityState.Modified;
-                await this.db.SaveChangesAsync();
+
+                try
+                {
+                    await this.db.SaveChangesAsync();
+                }
+                catch (OptimisticConcurrencyException)
+                {
+                    ((IObjectContextAdapter)this.db).ObjectContext.Refresh(RefreshMode.ClientWins, this.db.Categories);
+                    ((IObjectContextAdapter)this.db).ObjectContext.Refresh(RefreshMode.ClientWins, this.db.Products);
+                    await this.db.SaveChangesAsync();
+                }
+
+                
                 return RedirectToAction("Index");
             }
 
