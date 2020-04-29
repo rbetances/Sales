@@ -5,7 +5,10 @@ using Sales.Common.Models;
 using Sales.Helpers;
 using Sales.Resources;
 using Sales.Services;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -20,6 +23,8 @@ namespace Sales.ViewModels
         private bool isEnabled;
         private ApiService apiService;
         private Product product;
+        private ObservableCollection<Category> categories;
+        private Category category;
         #endregion
 
         #region Constructor
@@ -29,6 +34,7 @@ namespace Sales.ViewModels
             this.IsEnabled = true;
             this.product = product;
             this.ImageSource = product.ImageFullPath;
+            this.LoadCategories();
         }
         #endregion
 
@@ -55,6 +61,30 @@ namespace Sales.ViewModels
             get { return this.product; }
             set { this.SetProperty(ref this.product, value); }
         }
+        public List<Category> MyCategories { get; set; }
+        public ObservableCollection<Category> Categories
+        {
+            get
+            {
+                return this.categories;
+            }
+            set
+            {
+                this.SetProperty(ref this.categories, value);
+            }
+        }
+        public Category Category
+        {
+            get
+            {
+                return this.category;
+            }
+            set
+            {
+                this.SetProperty(ref this.category, value);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -237,6 +267,51 @@ namespace Sales.ViewModels
             this.isRunning = false;
 
             await App.Navigator.PopAsync();
+        }
+        private async void LoadCategories()
+        {
+            this.IsRunning = true;
+            this.IsEnabled = false;
+
+            var connection = await this.apiService.CheckConnection();
+            if (!connection.IsSuccess)
+            {
+                this.IsRunning = false;
+                this.IsEnabled = true;
+                await Application.Current.MainPage.DisplayAlert(Languages.Error, connection.Message, "Ok");
+                return;
+            }
+
+            var answer = await this.LoadCategoriesFromAPI();
+            if (answer)
+            {
+                this.RefreshList();
+            }
+
+            this.Category = this.MyCategories.Where(x => x.CategoryId == this.product.CategoryId).FirstOrDefault();
+
+            this.IsRunning = false;
+            this.IsEnabled = true;
+
+        }
+        private void RefreshList()
+        {
+            this.Categories = new ObservableCollection<Category>(this.MyCategories.OrderBy(c => c.Description));
+        }
+
+        private async Task<bool> LoadCategoriesFromAPI()
+        {
+            var url = Application.Current.Resources["UrlApi"].ToString();
+            var prefix = Application.Current.Resources["UrlPrefix"].ToString();
+            var controller = Application.Current.Resources["UrlCategoriesController"].ToString();
+            var response = await this.apiService.GetList<Category>(url, prefix, controller, Settings.TokenType, Settings.AccessToken);
+            if (!response.IsSuccess)
+            {
+                return false;
+            }
+
+            this.MyCategories = (List<Category>)response.Result;
+            return true;
         }
         #endregion
     }

@@ -131,7 +131,9 @@ namespace Sales.ViewModels
                 Price = x.Price,
                 ProductId = x.ProductId,
                 PublishOn = x.PublishOn,
-                Remarks = x.Remarks
+                Remarks = x.Remarks,
+                CategoryId = x.CategoryId,
+                UserId = x.UserId
             });
             if (string.IsNullOrEmpty(this.Filter))
             {
