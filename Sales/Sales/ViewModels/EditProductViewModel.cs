@@ -163,6 +163,7 @@ namespace Sales.ViewModels
 
         private async void Save()
         {
+           
             if (string.IsNullOrEmpty(this.Product.Description))
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.DescriptionError, "Ok");
@@ -174,7 +175,12 @@ namespace Sales.ViewModels
                 return;
             }
 
-            this.IsRunning = true;
+            if (this.Category == null)
+            {
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.CategoryError, "Ok");
+                return;
+            }
+                this.IsRunning = true;
             this.IsEnabled = false;
 
             var connection = await apiService.CheckConnection();
@@ -187,6 +193,7 @@ namespace Sales.ViewModels
                 return;
             }
 
+            this.Product.CategoryId = this.Category.CategoryId;
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
@@ -218,7 +225,9 @@ namespace Sales.ViewModels
 
             this.IsRunning = false;
             this.IsEnabled = true;
+
             await App.Navigator.PopAsync();
+
 
         }
         private async void DeleteProduct()

@@ -137,7 +137,7 @@ namespace Sales.ViewModels
             });
             if (string.IsNullOrEmpty(this.Filter))
             {
-                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.OrderBy(x => x.Description));
+                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(x=>x.CategoryId == this.Category.CategoryId).OrderBy(x => x.Description));
             }
             else
             {
