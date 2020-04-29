@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -28,13 +29,13 @@ namespace Sales.API.Controllers
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> GetProduct(int id)
         {
-            Product product = await db.Products.FindAsync(id);
-            if (product == null)
+            List<Product> products = await db.Products.Where(x=>x.CategoryId == id).ToListAsync();
+            if (products == null)
             {
                 return NotFound();
             }
 
-            return Ok(product);
+            return Ok(products);
         }
 
         // PUT: api/Products/5

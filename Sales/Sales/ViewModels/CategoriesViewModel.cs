@@ -101,7 +101,7 @@
                 {
                     CategoryId = c.CategoryId,
                     Description = c.Description,
-                    ImagePath = c.ImagePath,
+                    ImagePath = c.ImagePath
                 });
 
                 this.Categories = new ObservableCollection<CategoryItemViewModel>(
