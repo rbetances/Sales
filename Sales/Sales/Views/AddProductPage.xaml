@@ -65,12 +65,28 @@
                     <Label 
                         Grid.Column="0"
                         Grid.Row="2"
+                        Text="{i18n:Translate Category}"
+                        VerticalOptions="Center">
+                    </Label>
+                    <Picker 
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        ItemDisplayBinding="{Binding Description}"
+                        ItemsSource="{Binding Categories}"
+                        SelectedItem="{Binding Category}"
+                        Title="{i18n:Translate CategoryPlaceholder}"
+                        VerticalOptions="FillAndExpand">
+                    </Picker>
+
+                    <Label 
+                        Grid.Column="0"
+                        Grid.Row="3"
                         Text="{i18n:Translate Remarks}"
                         VerticalOptions="Center">
                     </Label>
                     <Editor 
                         Grid.Column="1"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Text="{Binding Remarks}"
                         VerticalOptions="FillAndExpand">
                     </Editor>

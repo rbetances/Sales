@@ -46,12 +46,19 @@ namespace Sales.ViewModels
             get { return this.isRefreshing; }
             set { this.SetProperty(ref this.isRefreshing, value); }
         }
+        private Category Category
+        { 
+            get;
+            set; 
+        }
+
         #endregion
 
         #region Constructors
-        public ProductsViewModel()
+        public ProductsViewModel(Category category)
         {
             instance = this;
+            this.Category = category;
             this.apiService = new ApiService();
             this.dataService = new DataService();
             this.LoadProducts();
@@ -63,13 +70,7 @@ namespace Sales.ViewModels
 
         public static ProductsViewModel GetInstance()
         {
-            if (instance == null)
-            {
-                return new ProductsViewModel();
-            }
-
             return instance;
-
         }
         #endregion
 
@@ -85,22 +86,10 @@ namespace Sales.ViewModels
                 var answer = await this.LoadProductsFromApi();
                 if (answer)
                 {
-                    this.SaveProductsToDB();
+                    this.RefreshList();
                 }
-                else
-                    await this.LoadProductsFromDB();
+       
             }
-            else
-            {
-                await this.LoadProductsFromDB();
-            }
-            if (this.MyProducts == null || this.MyProducts.Count == 0)
-            {
-                this.IsRefreshing = false;
-                await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.NoProductsMessage, "Ok");
-                return;
-            }
-            this.RefreshList();
             this.IsRefreshing = false;
         }
 
@@ -120,7 +109,7 @@ namespace Sales.ViewModels
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController, Settings.TokenType, Settings.AccessToken);
+            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController,this.Category.CategoryId, Settings.TokenType, Settings.AccessToken);
 
             if (!response.IsSuccess)
             {

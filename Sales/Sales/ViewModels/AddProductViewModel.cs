@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Plugin.Media;
@@ -20,6 +23,8 @@ namespace Sales.ViewModels
         private bool isRunning;
         private bool isEnabled;
         private ApiService apiService;
+        private ObservableCollection<Category> categories;
+        private Category category;
         #endregion
 
         #region Properties
@@ -45,6 +50,30 @@ namespace Sales.ViewModels
             set { SetProperty(ref this.imageSource, value); }
         }
 
+        public List<Category> MyCategories { get; set; }
+        public ObservableCollection<Category> Categories
+        {
+            get
+            {
+                return this.categories;
+            }
+            set
+            {
+                this.SetProperty(ref this.categories, value);
+            }
+        }
+        public Category Category
+        {
+            get
+            {
+                return this.category;
+            }
+            set
+            {
+                this.SetProperty(ref this.category, value);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -53,7 +82,9 @@ namespace Sales.ViewModels
             apiService = new ApiService();
             this.IsEnabled = true;
             this.ImageSource = "NoProduct";
+            this.LoadCategories();
         }
+
         #endregion
 
         #region Commands
@@ -75,6 +106,49 @@ namespace Sales.ViewModels
         #endregion
 
         #region Methods
+        private async void LoadCategories()
+        {
+            this.IsRunning = true;
+            this.IsEnabled = false;
+
+            var connection = await this.apiService.CheckConnection();
+            if (!connection.IsSuccess)
+            {
+                this.IsRunning = false;
+                this.IsEnabled = true;
+                await Application.Current.MainPage.DisplayAlert(Languages.Error, connection.Message, "Ok");
+                return;
+            }
+
+            var answer = await this.LoadCategoriesFromAPI();
+            if (answer)
+            {
+                this.RefreshList();
+            }
+
+            this.IsRunning = false;
+            this.IsEnabled = true;
+
+        }
+        private void RefreshList()
+        {
+            this.Categories = new ObservableCollection<Category>(this.MyCategories.OrderBy(c => c.Description));
+        }
+
+        private async Task<bool> LoadCategoriesFromAPI()
+        {
+            var url = Application.Current.Resources["UrlApi"].ToString();
+            var prefix = Application.Current.Resources["UrlPrefix"].ToString();
+            var controller = Application.Current.Resources["UrlCategoriesController"].ToString();
+            var response = await this.apiService.GetList<Category>(url, prefix, controller, Settings.TokenType, Settings.AccessToken);
+            if (!response.IsSuccess)
+            {
+                return false;
+            }
+
+            this.MyCategories = (List<Category>)response.Result;
+            return true;
+        }
         private async void ChangeImage()
         {
             try
@@ -125,6 +199,7 @@ namespace Sales.ViewModels
 
         private async void Save()
         {
+           
             if (string.IsNullOrEmpty(this.Description))
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.DescriptionError, "Ok");
@@ -135,6 +210,11 @@ namespace Sales.ViewModels
             if (this.Price <= 0)
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.PriceError, "Ok");
+                return;
+            }
+            if (this.Category == null)
+            {
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, Resource.CategoryError, "Ok");
                 return;
             }
 
@@ -166,7 +246,9 @@ namespace Sales.ViewModels
                 Description = this.Description,
                 Price = price,
                 Remarks = this.Remarks,
-                ImageArray = imageArray
+                ImageArray = imageArray,
+                CategoryId = Category.CategoryId,
+                UserId = MainViewModel.GetInstance().UserASP.Id
             };
 
             var response = await this.apiService.Post(urlBase, urlPrefix, urlController, product,Settings.TokenType,Settings.AccessToken);
