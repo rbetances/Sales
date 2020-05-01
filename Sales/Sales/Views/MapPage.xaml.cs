@@ -10,17 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace Sales.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MasterPage : MasterDetailPage
+    public partial class MapPage : ContentPage
     {
-        public MasterPage()
+        public MapPage()
         {
             InitializeComponent();
-        }
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            App.Navigator = Navigator;
-            App.Master = this;
         }
     }
 }

@@ -29,6 +29,8 @@
         [Required]
         [StringLength(128)]
         public string UserId { get; set; }
+        public double Latitude { get; set; }
+        public double Logitude { get; set; }
         [NotMapped]
         public byte[] ImageArray { get; set; }
         public string ImageFullPath
