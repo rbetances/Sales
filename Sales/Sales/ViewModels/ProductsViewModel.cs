@@ -47,9 +47,9 @@ namespace Sales.ViewModels
             set { this.SetProperty(ref this.isRefreshing, value); }
         }
         private Category Category
-        { 
+        {
             get;
-            set; 
+            set;
         }
 
         #endregion
@@ -84,24 +84,29 @@ namespace Sales.ViewModels
             if (connection.IsSuccess)
             {
                 var answer = await this.LoadProductsFromApi();
-                if (answer)
+                if (!answer)
                 {
-                    this.RefreshList();
+                    await this.LoadProductsFromDB();
                 }
-       
             }
+            else
+            {
+                await this.LoadProductsFromDB();
+            }
+
+            this.RefreshList();
             this.IsRefreshing = false;
         }
 
         private async Task LoadProductsFromDB()
         {
-            this.MyProducts = await this.dataService.GetAllProducts();
+            this.MyProducts = await this.dataService.GetAllProductsByCategory(this.Category.CategoryId.ToString());
         }
 
         private async Task SaveProductsToDB()
         {
-           await this.dataService.DeleteAllProducts();
-           this.dataService.Insert(MyProducts);
+            await this.dataService.DeleteAllProducts();
+            await this.dataService.Insert(MyProducts);
         }
 
         private async Task<bool> LoadProductsFromApi()
@@ -109,7 +114,7 @@ namespace Sales.ViewModels
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController,this.Category.CategoryId, Settings.TokenType, Settings.AccessToken);
+            var response = await this.apiService.GetList<Product>(urlBase, urlPrefix, urlController, this.Category.CategoryId, Settings.TokenType, Settings.AccessToken);
 
             if (!response.IsSuccess)
             {
@@ -132,16 +137,17 @@ namespace Sales.ViewModels
                 ProductId = x.ProductId,
                 PublishOn = x.PublishOn,
                 Remarks = x.Remarks,
-                CategoryId = x.CategoryId,
+                CategoryId = Category.CategoryId,
                 UserId = x.UserId
             });
+
             if (string.IsNullOrEmpty(this.Filter))
             {
-                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(x=>x.CategoryId == this.Category.CategoryId).OrderBy(x => x.Description));
+                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(x => x.CategoryId == this.Category.CategoryId).OrderBy(x => x.Description));
             }
             else
             {
-                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(y => y.Description.ToLower().Contains(this.Filter.ToLower())).OrderBy(x => x.Description));
+                this.Products = new ObservableCollection<ProductItemViewModel>(myListProductItemViewModel.Where(y => y.Description.ToLower().Contains(this.Filter.ToLower()) && y.CategoryId == Category.CategoryId).OrderBy(x => x.Description));
             }
         }
         #endregion

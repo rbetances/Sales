@@ -8,6 +8,7 @@
     using Common.Models;
     using GalaSoft.MvvmLight.Command;
     using Helpers;
+    using Sales.Resources;
     using Services;
     using Xamarin.Forms;
 
@@ -18,9 +19,13 @@
 
         private ApiService apiService;
 
+        private DataService dataService;
+
         private bool isRefreshing;
 
         private ObservableCollection<CategoryItemViewModel> categories;
+
+        private List<Product> allProducts = new List<Product>();
         #endregion
 
         #region Properties
@@ -53,6 +58,7 @@
         public CategoriesViewModel()
         {
             this.apiService = new ApiService();
+            this.dataService = new DataService();
             this.LoadCategories();
         }
         #endregion
@@ -66,11 +72,9 @@
             await Task.Delay(1000);
             if (!connection.IsSuccess)
             {
+                await this.LoadCategoriesFromDB();
                 this.IsRefreshing = false;
-                await Application.Current.MainPage.DisplayAlert(
-                    Languages.Error,
-                    connection.Message,
-                    "OK");
+                this.RefreshList();
                 return;
             }
 
@@ -80,15 +84,22 @@
             var response = await this.apiService.GetList<Category>(url, prefix, controller, Settings.TokenType, Settings.AccessToken);
             if (!response.IsSuccess)
             {
+                await this.LoadCategoriesFromDB();
                 this.IsRefreshing = false;
-                await Application.Current.MainPage.DisplayAlert(
-                    Languages.Error,
-                    response.Message,
-                    "Ok");
+                if (this.MyCategories == null || this.MyCategories.Count == 0)
+                    await Application.Current.MainPage.DisplayAlert(
+                        Languages.Error,
+                        Resource.NoProductsMessage,
+                        "OK");
+                else
+                    this.RefreshList();
+
                 return;
             }
 
             this.MyCategories = (List<Category>)response.Result;
+            this.SaveCategoriesToDB();
+            this.SaveAllProducts();
             this.RefreshList();
             this.IsRefreshing = false;
         }
@@ -120,6 +131,36 @@
                     myListCategoriesItemViewModel.OrderBy(c => c.Description));
             }
         }
+        private async Task LoadCategoriesFromDB()
+        {
+            this.MyCategories = await this.dataService.GetAllCategories();
+        }
+
+        private async Task SaveCategoriesToDB()
+        {
+            await this.dataService.DeleteAllCategories();
+            await this.dataService.Insert(this.MyCategories);
+        }
+
+        private async Task SaveAllProducts()
+        {
+            var url = Application.Current.Resources["UrlApi"].ToString();
+            var prefix = Application.Current.Resources["UrlPrefix"].ToString();
+            var controller = Application.Current.Resources["UrlProductsController"].ToString();
+            var response = await this.apiService.GetList<Product>(url, prefix, controller, Settings.TokenType, Settings.AccessToken);
+
+            if (response.IsSuccess)
+            {
+                allProducts = (List<Product>)response.Result;
+                await SaveAllProductsLocal();
+            }
+        }
+        private async Task SaveAllProductsLocal()
+        {
+            await this.dataService.DeleteAllProducts();
+            await this.dataService.Insert(allProducts);
+        }
+
         #endregion
 
         #region Commands

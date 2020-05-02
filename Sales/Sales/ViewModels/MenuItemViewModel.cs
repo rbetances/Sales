@@ -35,7 +35,7 @@ namespace Sales.ViewModels
                 MainViewModel.GetInstance().Login = new LoginViewModel();
                 Application.Current.MainPage = new NavigationPage(new LoginPage());
             }
-            else if (this.PageName == "AboutPage")
+            else if (this.PageName == "MapPage")
             {
                 App.Master.IsPresented = false;
                await App.Navigator.PushAsync(new MapPage());

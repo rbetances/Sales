@@ -1,6 +1,7 @@
 ﻿namespace Sales.Common.Models
 {
     using Newtonsoft.Json;
+    using SQLite;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -15,6 +16,7 @@
         [Display(Name = "Image")]
         public string ImagePath { get; set; }
         [JsonIgnore]
+        [Ignore]
         public virtual ICollection<Product> Products { get; set; }
 
         public string ImageFullPath

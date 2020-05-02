@@ -46,9 +46,16 @@ namespace Sales.ViewModels
         #region Methods
         private async void EditProduct()
         {
+            var connection = await apiService.CheckConnection();
+            if (!connection.IsSuccess)
+            {
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, connection.Message, "Ok");
+                return;
+            }
             MainViewModel.GetInstance().EditProduct = new EditProductViewModel(this);
             await App.Navigator.PushAsync(new EditProductPage());
         }
+
         private async void DeleteProduct()
         {
             var answer = await Application.Current.MainPage.DisplayAlert(
@@ -71,7 +78,7 @@ namespace Sales.ViewModels
             var urlBase = Application.Current.Resources["UrlApi"].ToString();
             var urlPrefix = Application.Current.Resources["UrlPrefix"].ToString();
             var urlController = Application.Current.Resources["UrlProductsController"].ToString();
-            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.ProductId,Settings.TokenType,Settings.AccessToken);
+            var response = await this.apiService.Delete(urlBase, urlPrefix, urlController, this.ProductId, Settings.TokenType, Settings.AccessToken);
             if (!response.IsSuccess)
             {
                 await Application.Current.MainPage.DisplayAlert(Resource.Error, response.Message, "Ok");

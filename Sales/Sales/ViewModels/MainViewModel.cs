@@ -4,6 +4,7 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Sales.Common.Models;
 using Sales.Resources;
+using Sales.Services;
 using Sales.Views;
 using Xamarin.Forms;
 
@@ -11,6 +12,10 @@ namespace Sales.ViewModels
 {
     public class MainViewModel
     {
+        #region Attributes
+        private ApiService apiService;
+        #endregion
+
         #region Properties
         public ProductsViewModel Products { get; set; }
         public AddProductViewModel AddProduct { get; set; }
@@ -58,6 +63,7 @@ namespace Sales.ViewModels
         public MainViewModel()
         {
             instance = this;
+            this.apiService = new ApiService();
             this.LoadMenu();
         }
         #endregion
@@ -80,8 +86,8 @@ namespace Sales.ViewModels
             this.Menu.Add(new MenuItemViewModel
             {
                 Icon = "info",
-                PageName = "AboutPage",
-                Title = Resource.About,
+                PageName = "MapPage",
+                Title = "Mapa",
             });
 
             this.Menu.Add(new MenuItemViewModel
@@ -100,6 +106,12 @@ namespace Sales.ViewModels
         }
         private async void GoToAddProduct()
         {
+            var connection = await apiService.CheckConnection();
+            if (!connection.IsSuccess)
+            {
+                await Application.Current.MainPage.DisplayAlert(Resource.Error, connection.Message, "Ok");
+                return;
+            }
             this.AddProduct = new AddProductViewModel();
             await App.Navigator.PushAsync(new AddProductPage());
         }
