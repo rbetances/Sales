@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "514655368916",
+    "firebase_url": "https://sales-275221.firebaseio.com",
+    "project_id": "sales-275221",
+    "storage_bucket": "sales-275221.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514655368916:android:8a96eee64b4b2adb8ded41",
+        "android_client_info": {
+          "package_name": "com.companyname.sales"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514655368916-u0oo2uerkqtrnr9bga6gn2ifoss1u1q2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsNceGniT6JqjQAkPzN2bH4DdqqMQpFew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514655368916-u0oo2uerkqtrnr9bga6gn2ifoss1u1q2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

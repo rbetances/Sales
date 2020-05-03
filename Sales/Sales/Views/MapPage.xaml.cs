@@ -28,11 +28,6 @@
         {
             var locator = CrossGeolocator.Current;
             locator.DesiredAccuracy = 50;
-            if (!locator.IsGeolocationEnabled || !locator.IsGeolocationAvailable)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", "Habilite el gps", "Ok");
-                return;
-            }
             var location = await locator.GetPositionAsync();
             var position = new Position(location.Latitude, location.Longitude);
             this.MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromKilometers(1)));
@@ -46,8 +41,8 @@
                 ex.ToString();
             }
 
-            // var pins = await this.GetPins();
-            //this.ShowPins(pins);
+            var pins = await this.GetPins();
+            this.ShowPins(pins);
         }
 
         private void ShowPins(List<Pin> pins)
@@ -62,7 +57,7 @@
         {
             var pins = new List<Pin>();
             var apiService = new ApiService();
-            var url = Application.Current.Resources["UrlAPI"].ToString();
+            var url = Application.Current.Resources["UrlApi"].ToString();
             var prefix = Application.Current.Resources["UrlPrefix"].ToString();
             var controller = Application.Current.Resources["UrlProductsController"].ToString();
             var response = await apiService.GetList<Product>(url, prefix, controller, Settings.TokenType, Settings.AccessToken);
@@ -87,6 +82,10 @@
             var zoomLevel = double.Parse(e.NewValue.ToString()) * 18.0;
             var latlongdegrees = 360 / (Math.Pow(2, zoomLevel));
             this.MyMap.MoveToRegion(new MapSpan(this.MyMap.VisibleRegion.Center, latlongdegrees, latlongdegrees));
+        }
+
+        private void MyMap_MapClicked(object sender, MapClickedEventArgs e)
+        {
         }
     }
 }

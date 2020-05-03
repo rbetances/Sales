@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Sales.Common.Models;
@@ -241,6 +243,8 @@ namespace Sales.ViewModels
                 imageArray = FilesHelper.ReadFully(this.file.GetStream());
             }
 
+            var location = await this.GetLocation();
+
             var product = new Product
             {
                 Description = this.Description,
@@ -248,7 +252,9 @@ namespace Sales.ViewModels
                 Remarks = this.Remarks,
                 ImageArray = imageArray,
                 CategoryId = Category.CategoryId,
-                UserId = MainViewModel.GetInstance().UserASP.Id
+                UserId = MainViewModel.GetInstance().UserASP.Id,
+                Longitude = location == null ? 0 : location.Longitude,
+                Latitude = location == null ? 0 : location.Latitude,
             };
 
             var response = await this.apiService.Post(urlBase, urlPrefix, urlController, product,Settings.TokenType,Settings.AccessToken);
@@ -270,7 +276,13 @@ namespace Sales.ViewModels
             this.IsRunning = false;
             this.IsEnabled = true;
             await App.Navigator.PopAsync();
-
+        }
+        private async Task<Position> GetLocation()
+        {
+            var locator = CrossGeolocator.Current;
+            locator.DesiredAccuracy = 50;
+            var location = await locator.GetPositionAsync();
+            return location;
         }
         #endregion
     }

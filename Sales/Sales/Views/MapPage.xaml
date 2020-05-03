@@ -13,7 +13,8 @@
                 x:Name="MyMap"
                 HorizontalOptions="FillAndExpand"
                 MapType="Street"
-                VerticalOptions="FillAndExpand">
+                VerticalOptions="FillAndExpand"
+                MapClicked="MyMap_MapClicked">
             </maps:Map>
             <Slider
                 x:Name="MySlider"

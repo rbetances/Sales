@@ -1,7 +1,9 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Gms.Common;
 using Android.OS;
 using Android.Runtime;
+using Firebase.Iid;
 using ImageCircle.Forms.Plugin.Droid;
 
 namespace Sales.Droid
@@ -9,6 +11,25 @@ namespace Sales.Droid
     [Activity(Label = "Sales", Icon = "@drawable/ic_launcher", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        public bool IsPlayServicesAvailable()
+        {
+            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this); if (resultCode != ConnectionResult.Success)
+            {
+                if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
+                    GoogleApiAvailability.Instance.GetErrorString(resultCode);
+                else
+                {
+                    //This device is not supported           
+                    Finish(); // Kill the activity if you want.         
+                }
+                return false;
+            }
+            else
+            {
+                //Google Play Services is available.         
+                return true;
+            }
+        }
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
